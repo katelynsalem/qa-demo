@@ -1,0 +1,49 @@
+https://playwright.dev/docs/test-retries/#serial-mode
+
+const { test } = require('@playwright/test');
+
+test.describe.serial('use the same page', () => {
+  /** @type {import('@playwright/test').Page} */
+  let page;
+
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
+  });
+
+  test.afterAll(async () => {
+    await page.close();
+  });
+
+  test('When user logs in', async ({}) => {
+    **** Call test.step with the below actions ****
+    const commonAction = new CommonAction();
+    await commonAction.gotoPage(page);
+    await expect(page).toHaveURL('https://uat.mercator.createit.dev/login');
+    await commonAction.login( page, janEmail, janPasswd );
+  });
+
+  test('Then user is in my account page', async ({}) => {
+    const navigationAction = new NavigationAction();
+    await navigationAction.verifyAccountPage(page);  
+  });
+  
+  test('When user goes to newsletter subscriptions', async ({}) => {
+    const navigationAction = new NavigationAction();
+    await navigationAction.goToNewsSubscription(page);  
+  });
+
+  test('Then user is in Newsletter subscription page', async ({}) => {
+    const navigationAction = new NavigationAction();
+    await navigationAction.verifyNewsletterPage(page);  
+  });
+
+  test('When user updates subscription', async ({}) => {
+    const newsletterAction = new NewsletterAction();
+    newsletterAction.subscribe(page);
+  });
+
+  test('Then user is redirected to My Account page after subscription updates', async ({}) => {
+    const navigationAction = new NavigationAction();
+    await navigationAction.verifyAccountPage();
+  }); 
+});
